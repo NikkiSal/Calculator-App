@@ -11,21 +11,30 @@ import UIKit
 class ViewController: UIViewController {
     
     @IBOutlet weak var displayLabel: UILabel!
-    private var isFinishedTypingNumber = true
+    private var isFinishedTypingNumber = true // make global variables, private
+    private var  displayValue: Double {
+        get {
+            guard let number = Double(displayLabel.text!) else {
+                fatalError("Cannot convert display label text to a Double.")
+            }
+            return number
+        }
+        set {
+            displayLabel.text = String(newValue)
+        }
+    }
     
     
     @IBAction func calcButtonPressed(_ sender: UIButton) {
         isFinishedTypingNumber = true
-        guard let number = Double(displayLabel.text!) else {
-            fatalError("Cannot convert display label text to a Double.")
-        }
+        
         if let calcMethod = sender.currentTitle {
             if calcMethod == "+/-" {
-                displayLabel.text = String(number * -1)
+                displayValue *= -1
             } else if calcMethod == "AC" {
                 displayLabel.text = "0"
             } else {
-                displayLabel.text = String(number/100)
+                displayValue *= 0.01
             }
         }
     }
@@ -36,22 +45,23 @@ class ViewController: UIViewController {
                 displayLabel.text = numValue
                 isFinishedTypingNumber = false
             } else {
-                if numValue == "." { // this is a very confusing peice of code!
+                if numValue == "." {
                     if let currentText = displayLabel.text {
                         if !currentText.contains(".") {
                             displayLabel.text = displayLabel.text! + numValue
                         }
                         return
                     }
-//                    guard let currentDisplayValue = Double(displayLabel.text!) else {
-//                        fatalError("Cannot convert display label text to a Double!")
-//                    }
-//                    let isInt = floor(currentDisplayValue) == currentDisplayValue
-//                    if !isInt {
-//                        return
-//                    }
+                    //                    this is a very confusing peice of code!
+                    //                    guard let currentDisplayValue = Double(displayLabel.text!) else {
+                    //                        fatalError("Cannot convert display label text to a Double!")
+                    //                    }
+                    //                    let isInt = floor(currentDisplayValue) == currentDisplayValue
+                    //                    if !isInt {
+                    //                        return
+                    //                    }
                 }
-                 displayLabel.text = displayLabel.text! + numValue
+                displayLabel.text = displayLabel.text! + numValue
             }
         }
     }
