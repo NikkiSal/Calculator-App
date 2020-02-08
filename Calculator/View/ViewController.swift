@@ -1,17 +1,12 @@
-//
-//  ViewController.swift
-//  Calculator
-//
-//  Created by Angela Yu on 10/09/2019.
-//  Copyright © 2019 London App Brewery. All rights reserved.
-//
 
 import UIKit
 
 class ViewController: UIViewController {
     
     @IBOutlet weak var displayLabel: UILabel!
+    private var calculator = CalculatorLogic()
     private var isFinishedTypingNumber = true // make global variables, private
+    
     private var  displayValue: Double {
         get {
             guard let number = Double(displayLabel.text!) else {
@@ -24,30 +19,25 @@ class ViewController: UIViewController {
         }
     }
     
-    
     @IBAction func calcButtonPressed(_ sender: UIButton) {
         isFinishedTypingNumber = true
-        
+        calculator.setNumber(displayValue)
         if let calcMethod = sender.currentTitle {
-            if calcMethod == "+/-" {
-                displayValue *= -1
-            } else if calcMethod == "AC" {
-                displayLabel.text = "0"
-            } else {
-                displayValue *= 0.01
+            if let result = calculator.calculate(symbol: calcMethod)  {
+                displayValue = result
             }
         }
     }
+    
     @IBAction func numButtonPressed(_ sender: UIButton) {
-        
         if let numValue = sender.currentTitle {
             if isFinishedTypingNumber {
                 displayLabel.text = numValue
                 isFinishedTypingNumber = false
             } else {
                 if numValue == "." {
-                    if let currentText = displayLabel.text {
-                        if !currentText.contains(".") {
+                    if let displayValue = displayLabel.text {
+                        if !displayValue.contains(".") {
                             displayLabel.text = displayLabel.text! + numValue
                         }
                         return
